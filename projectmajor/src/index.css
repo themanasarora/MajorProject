@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Teacher Assistant App Design System - Friendly Pastels */
+
+@layer base {
+  :root {
+    /* Base colors - soft and welcoming */
+    --background: 251 100% 98%;
+    --foreground: 240 15% 25%;
+
+    /* Card system - gentle elevation */
+    --card: 0 0% 100%;
+    --card-foreground: 240 15% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 15% 25%;
+
+    /* Primary - soft lavender */
+    --primary: 262 52% 70%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - gentle mint */
+    --secondary: 151 35% 88%;
+    --secondary-foreground: 240 15% 25%;
+
+    /* Muted - very light pastels */
+    --muted: 220 15% 95%;
+    --muted-foreground: 240 10% 55%;
+
+    /* Accent - blush pink */
+    --accent: 340 35% 88%;
+    --accent-foreground: 240 15% 25%;
+
+    /* Sky blue for info/success states */
+    --info: 200 85% 75%;
+    --info-foreground: 0 0% 100%;
+
+    /* Destructive - soft coral */
+    --destructive: 0 60% 75%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs - very subtle */
+    --border: 220 20% 90%;
+    --input: 220 20% 92%;
+    --ring: 262 52% 70%;
+
+    /* Friendly rounded corners */
+    --radius: 0.75rem;
+
+    /* Sidebar - soft lavender background */
+    --sidebar-background: 262 30% 96%;
+    --sidebar-foreground: 240 15% 35%;
+    --sidebar-primary: 262 52% 70%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 262 20% 92%;
+    --sidebar-accent-foreground: 240 15% 25%;
+    --sidebar-border: 262 20% 88%;
+    --sidebar-ring: 262 52% 70%;
+
+    /* Gradients for beautiful effects */
+    --gradient-primary: linear-gradient(135deg, hsl(262 52% 70%), hsl(340 35% 75%));
+    --gradient-secondary: linear-gradient(135deg, hsl(151 35% 88%), hsl(200 85% 85%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(220 15% 98%));
+
+    /* Shadows for depth */
+    --shadow-sm: 0 2px 8px hsl(262 52% 70% / 0.08);
+    --shadow-md: 0 4px 16px hsl(262 52% 70% / 0.12);
+    --shadow-lg: 0 8px 32px hsl(262 52% 70% / 0.16);
+
+    /* Motivational accent colors */
+    --success: 151 55% 65%;
+    --warning: 45 85% 70%;
+  }
+
+  .dark {
+    --background: 240 15% 8%;
+    --foreground: 220 15% 92%;
+
+    --card: 240 12% 12%;
+    --card-foreground: 220 15% 92%;
+
+    --popover: 240 12% 12%;
+    --popover-foreground: 220 15% 92%;
+
+    --primary: 262 52% 75%;
+    --primary-foreground: 240 15% 8%;
+
+    --secondary: 240 8% 18%;
+    --secondary-foreground: 220 15% 92%;
+
+    --muted: 240 8% 15%;
+    --muted-foreground: 220 10% 65%;
+
+    --accent: 340 25% 25%;
+    --accent-foreground: 220 15% 92%;
+
+    --info: 200 75% 65%;
+    --destructive: 0 55% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 8% 20%;
+    --input: 240 8% 18%;
+    --ring: 262 52% 75%;
+
+    --sidebar-background: 240 12% 10%;
+    --sidebar-foreground: 220 15% 85%;
+    --sidebar-primary: 262 52% 75%;
+    --sidebar-primary-foreground: 240 15% 8%;
+    --sidebar-accent: 240 8% 15%;
+    --sidebar-accent-foreground: 220 15% 85%;
+    --sidebar-border: 240 8% 18%;
+    --sidebar-ring: 262 52% 75%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(262 52% 75%), hsl(340 35% 65%));
+    --gradient-secondary: linear-gradient(135deg, hsl(151 35% 35%), hsl(200 85% 35%));
+    --gradient-card: linear-gradient(135deg, hsl(240 12% 12%), hsl(240 8% 15%));
+
+    --shadow-sm: 0 2px 8px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 16px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 8px 32px hsl(0 0% 0% / 0.5);
+
+    --success: 151 45% 55%;
+    --warning: 45 75% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium;
+  }
+}
+
+@layer components {
+  .motivational-text {
+    @apply text-sm text-muted-foreground italic;
+  }
+
+  .card-gentle {
+    @apply bg-gradient-to-br from-card to-muted/30 border border-border/50 rounded-xl shadow-sm;
+  }
+
+  .button-friendly {
+    @apply bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground rounded-full transition-all duration-200 hover:scale-105 shadow-sm;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-sidebar-accent;
+  }
+
+  .sidebar-item.active {
+    @apply bg-sidebar-primary text-sidebar-primary-foreground shadow-sm;
+  }
+
+  .floating-bubble {
+    @apply fixed bottom-6 right-6 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50;
+  }
+}
