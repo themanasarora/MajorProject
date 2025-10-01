@@ -3,12 +3,23 @@ import { Search, LogIn, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
-import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";  // ✅ import your auth hook
+import { useNavigate } from "react-router-dom";    // ✅ for redirect
 
 export function TopNavigation() {
   const [searchQuery, setSearchQuery] = useState("");
   const { theme, setTheme } = useTheme();
-  const { toast } = useToast();
+  const { user, logout } = useAuth();  // ✅ get user + logout function
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();       // ✅ call Firebase logout
+      navigate("/login");   // ✅ redirect to login page
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between">
@@ -31,8 +42,9 @@ export function TopNavigation() {
         </div>
       </div>
 
-      {/* Right side - Theme toggle and Login */}
+      {/* Right side - Theme toggle and Logout */}
       <div className="flex items-center gap-3">
+        {/* Theme toggle */}
         <Button
           variant="ghost"
           size="icon"
@@ -44,18 +56,13 @@ export function TopNavigation() {
           <span className="sr-only">Toggle theme</span>
         </Button>
 
-        <Button
-          className="button-friendly px-6"
-          onClick={() =>
-            toast({
-              title: "Authentication not set up",
-              description: "Connect Supabase (top-right) to enable Login/Signup.",
-            })
-          }
-        >
-          <LogIn className="h-4 w-4 mr-2" />
-          Login
-        </Button>
+        {/* Logout button (only if logged in) */}
+        {user && (
+          <Button className="button-friendly px-6" onClick={handleLogout}>
+            <LogIn className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
+        )}
       </div>
     </header>
   );
