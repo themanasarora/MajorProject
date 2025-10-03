@@ -1,31 +1,36 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { db } from "../firebase"; // make sure you export db from firebase.js
+import { doc, setDoc } from "firebase/firestore";
 
 const Signup = () => {
-  const { signup, googleLogin } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("student"); // default lowercase student
   const [error, setError] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
       setError("");
-      await signup(email, password);
-      navigate("/"); // redirect to dashboard after signup
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+      const userCred = await signup(email, password); // returns UserCredential
 
-  const handleGoogleSignup = async () => {
-    try {
-      setError("");
-      await googleLogin();
-      navigate("/");
+      // save role in Firestore
+      await setDoc(doc(db, "users", userCred.user.uid), {
+        email,
+        role,
+      });
+
+      // Navigate based on role
+      if (role === "teacher") {
+        navigate("/"); // dashboard route
+      } else {
+        navigate("/student");
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -55,6 +60,17 @@ const Signup = () => {
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
             required
           />
+
+          {/* Role select */}
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:text-white"
+          >
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+          </select>
+
           <button
             type="submit"
             className="w-full py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
@@ -62,14 +78,14 @@ const Signup = () => {
             Signup
           </button>
         </form>
-        <button
-          onClick={handleGoogleSignup}
-          className="w-full mt-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
-          Signup with Google
-        </button>
         <p className="mt-4 text-center text-gray-600 dark:text-gray-300">
-          Already have an account? <Link to="/login" className="text-purple-600 hover:underline">Login</Link>
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-purple-600 hover:underline"
+          >
+            Login
+          </Link>
         </p>
       </div>
     </div>
