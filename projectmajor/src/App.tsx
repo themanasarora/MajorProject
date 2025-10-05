@@ -20,6 +20,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import StudentWelcome from "./components/StudentWelcome";
 
+
 const Layout = () => {
   const { user } = useAuth();
   const location = useLocation();
@@ -51,6 +52,8 @@ const Layout = () => {
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
             <Route path="/notepad" element={<ProtectedRoute><Notepad /></ProtectedRoute>} />
             <Route path="/study-tools" element={<ProtectedRoute><StudyTools /></ProtectedRoute>} />
+    
+
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
