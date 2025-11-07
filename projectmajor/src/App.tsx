@@ -1,3 +1,4 @@
+// App.tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,10 +20,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import StudentWelcome from "./components/StudentWelcome";
+import TeacherHost from "./pages/TeacherHost";
+import StudentQuiz from "./pages/StudentQuiz";
 
 
 const Layout = () => {
-  const { user } = useAuth();
+  // use userData when available (merged profile + claims)
+  const { user, userData } = useAuth();
   const location = useLocation();
 
   // Hide sidebar/navbar/chat on login, signup, and student welcome page
@@ -31,11 +35,14 @@ const Layout = () => {
     location.pathname === "/signup" ||
     location.pathname === "/student";
 
+  // Also ensure layout hidden if no signed-in user
+  const shouldShowLayout = !hideLayout && user;
+
   return (
     <div className="flex h-screen bg-background">
-      {!hideLayout && user && <AppSidebar />}
-      <div className={`flex-1 flex flex-col overflow-hidden ${!hideLayout && user ? "lg:ml-0" : ""}`}>
-        {!hideLayout && user && <TopNavigation />}
+      {shouldShowLayout && <AppSidebar />}
+      <div className={`flex-1 flex flex-col overflow-hidden ${shouldShowLayout ? "lg:ml-0" : ""}`}>
+        {shouldShowLayout && <TopNavigation />}
         <main className="flex-1 overflow-y-auto">
           <Routes>
             {/* Public Routes */}
@@ -52,7 +59,8 @@ const Layout = () => {
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
             <Route path="/notepad" element={<ProtectedRoute><Notepad /></ProtectedRoute>} />
             <Route path="/study-tools" element={<ProtectedRoute><StudyTools /></ProtectedRoute>} />
-    
+            <Route path="/quiz-host" element={<ProtectedRoute role="teacher"><TeacherHost /></ProtectedRoute>} />
+            <Route path="/quiz" element={<ProtectedRoute><StudentQuiz /></ProtectedRoute>} />
 
 
             {/* Catch-all */}
@@ -60,20 +68,23 @@ const Layout = () => {
           </Routes>
         </main>
       </div>
-      {!hideLayout && user && <AIChatBubble />}
+      {shouldShowLayout && <AIChatBubble />}
     </div>
   );
 };
 
 const App = () => (
   <QueryClientProvider client={new QueryClient()}>
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+    {/* Force dark theme only */}
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Layout />
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter>
+            <Layout />
+          </BrowserRouter>
+        </AuthProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

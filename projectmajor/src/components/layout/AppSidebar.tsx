@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAuth } from "../../contexts/AuthContext"; // keep your path
 
 const navigationItems = [
   { title: "Home", url: "/", icon: Home },
@@ -26,6 +27,7 @@ const navigationItems = [
 export function AppSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { userData } = useAuth(); // read role from userData
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -56,11 +58,7 @@ export function AppSidebar() {
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="hover:bg-sidebar-accent"
           >
-            {isCollapsed ? (
-              <Menu className="h-4 w-4" />
-            ) : (
-              <X className="h-4 w-4" />
-            )}
+            {isCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
           </Button>
         </div>
       </div>
@@ -71,26 +69,39 @@ export function AppSidebar() {
           <NavLink
             key={item.url}
             to={item.url}
-            className={cn(
-              "sidebar-item",
-              isActive(item.url) && "active"
-            )}
+            className={cn("sidebar-item", isActive(item.url) && "active")}
           >
             <item.icon className="h-5 w-5 flex-shrink-0" />
-            {!isCollapsed && (
-              <span className="font-medium text-sm">{item.title}</span>
-            )}
+            {!isCollapsed && <span className="font-medium text-sm">{item.title}</span>}
           </NavLink>
         ))}
+
+        {/* Teacher-only Live Quiz host link */}
+        {userData?.role === "teacher" && (
+          <NavLink
+            to="/quiz-host"
+            className={cn("sidebar-item", isActive("/quiz-host") && "active")}
+          >
+            <Bot className="h-5 w-5 flex-shrink-0" />
+            {!isCollapsed && <span className="font-medium text-sm">Live Quiz (Host)</span>}
+          </NavLink>
+        )}
+
+        {/* Join Quiz link — visible to students and teachers */}
+        <NavLink
+          to="/quiz"
+          className={cn("sidebar-item", isActive("/quiz") && "active")}
+        >
+          <Bot className="h-5 w-5 flex-shrink-0" />
+          {!isCollapsed && <span className="font-medium text-sm">Join Quiz</span>}
+        </NavLink>
       </nav>
 
       {/* Motivational footer */}
       {!isCollapsed && (
         <div className="p-4 border-t border-sidebar-border">
           <div className="card-gentle p-3 text-center">
-            <p className="motivational-text">
-              🌟 You're doing great today!
-            </p>
+            <p className="motivational-text">🌟 You're doing great today!</p>
           </div>
         </div>
       )}
